@@ -319,8 +319,8 @@ var SoccerApp = function() {
     self.start = function() {
         //  Start the app on the specific interface (and port).
         server.listen(app.get('port'), function() {
-            console.log('%s: Soccer App started on %s:%d ...',
-                        Date(Date.now() ), app.get('ipaddr'), app.get('port'));
+            console.log('%s: Soccer App started on PORT : %d',
+                        Date(Date.now() ), app.get('port'));
         });
     };
 
