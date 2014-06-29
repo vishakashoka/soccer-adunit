@@ -14,7 +14,7 @@ var io = require('socket.io').listen(server);
 //     io.set("polling duration", 10);
 //     io.set("log level", 1);
 // });
-
+ 
 //app.set('ipaddr', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
 
 /**
