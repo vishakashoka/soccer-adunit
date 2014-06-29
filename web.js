@@ -298,7 +298,7 @@ var SoccerApp = function() {
             res.send(self.cache_get('host.html') );
 
             // Set host status active
-            client.host.status = 'active';
+            //client.website.status = 'active';
         };
 
         self.routes['/player'] = function(req, res) {
