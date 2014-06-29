@@ -27,7 +27,7 @@ var SoccerApp = function() {
     var self = this;
     var client = {};
     var sockets = [];
-
+    var goliWasRefreshed = false;
     /*  ================================================================  */
     /*  Helper functions.                                                 */
     /*  ================================================================  */
@@ -216,13 +216,17 @@ var SoccerApp = function() {
                 },
 
                 goliStatus: function(msg) {
+                  if(socket.id == client.player.id) {
                     console.log("Received goli status request from player. Responding back");
                     socket.emit('ackmessage', {'event': 'pingGoli', 'goliStatus': client.goli.status ? 'true' : 'false'});
+                  }
                 },
 
                 playerStatus: function(msg) {
-                    console.log("Received player status request from goli. Responding back");
-                    socket.emit('ackmessage', {'event': 'pingPlayer', 'playerStatus': client.player.status ? 'true' : 'false'});
+                    if(socket.id == client.goli.id) {
+                      console.log("Received player status request from goli. Responding back");
+                      socket.emit('ackmessage', {'event': 'pingPlayer', 'playerStatus': client.player.status ? 'true' : 'false'});
+                    }
                 },
 
                 handleClientAckMessage: function(amsg) {
@@ -251,6 +255,37 @@ var SoccerApp = function() {
                   eName = ''+eName;
                   msg = ''+msg;
                   socket.broadcast.emit(eName, msg);
+                },
+
+                // RESET CODE
+                handleResetAppRequest: function() {
+                  // Broadcast message to goli only. We need goli to refresh before the player.
+                  // Send the same command to player when is reloaded.
+                  io.emit('message', {'event': 'refresh', 'to': 'goli'});
+
+                  // If this is true, when goli refresh is done , goli registers 
+                  // identity with server, we use this flag to say goli to expand 
+                  // ad without waiting for the player to send expand signal
+                  goliWasRefreshed = true;
+                  self.resetServer();
+                },
+
+                // RESET CODE
+                goliRefreshed: function() {
+                  // RESET CODE
+                  if(goliWasRefreshed) {
+                    // Tell him to expand without waiting for player to expand
+                    if(client.goli.status === 'active') {
+                      console.log("Goli was Refreshed on server reset : So sending expand Ad signal to Goli.");
+                      setTimeout(function() { socket.emit('message', {'event': 'expand', 'to': 'goli'}); }, 3000);
+                    } else {
+                      console.log('Goli was Refreshed on server reset : But goli is inactive. Could not send expand Ad signal.');
+                    }
+                    goliWasRefreshed = false;
+
+                    // Now send refresh signal to player
+                    //io.emit('message', {'event': 'refresh', 'to': 'player'});
+                  }
                 }
             }
 
@@ -274,7 +309,12 @@ var SoccerApp = function() {
 
             // Client got 'connected'
             socket.on('connection', socketZ.handleClientConnect);
-            
+
+            // Reset App request from player.
+            socket.on('resetApp', socketZ.handleResetAppRequest);
+
+            // Refresh complete event from goli
+            socket.on('goliLoaded', socketZ.goliRefreshed);
         });
     };
 
@@ -288,7 +328,7 @@ var SoccerApp = function() {
     self.createRoutes = function() {
         self.routes = { };
 
-        self.routes['/asciimo'] = function(req, res) {
+        self.routes['/robo'] = function(req, res) {
             var link = "http://i.imgur.com/kmbjB.png";
             res.send("<html><body><img src='" + link + "'></body></html>");
         };
@@ -296,9 +336,6 @@ var SoccerApp = function() {
         self.routes['/host'] = function(req, res) {
             res.setHeader('Content-Type', 'text/html');
             res.send(self.cache_get('host.html') );
-
-            // Set host status active
-            //client.website.status = 'active';
         };
 
         self.routes['/player'] = function(req, res) {
@@ -337,6 +374,8 @@ var SoccerApp = function() {
      *  Initializes the sample application.
      */
     self.initialize = function() {
+        console.log("Server initializing");
+
         self.setupVariables();
         self.populateCache();
         self.setupTerminationHandlers();
@@ -348,6 +387,14 @@ var SoccerApp = function() {
         self.setupSocketListeners();
     };
 
+    // RESET CODE
+    self.resetServer = function() {
+      console.log("Server Restarting");
+
+      // Reset server variables.
+      self.initialize();
+      self.start();
+    }
 
     /**
      *  Start the server (starts up the sample application).

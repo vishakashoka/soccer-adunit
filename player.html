@@ -200,7 +200,10 @@
 
     // Reset animation
     anim.start();
-    kick.start();
+
+    // reset server
+    // console.log("Player sending reset signal to server.");
+    // resetApp();
   }
 
   function computeAngleOfKick() {
@@ -349,6 +352,12 @@
     return true;
   }
 
+  // Clear al cached data. Reset the application
+  function resetApp() {
+    // Send signal to server to broadcast reset command
+    iosocket.emit('resetApp', 'Broadcast message to all clients');
+  }
+
   // socket events and handlers
   var iosocket = null;
 
@@ -390,6 +399,18 @@
               iosocket.emit('message' , {'event': 'resetGame', 'to': 'goli'});
             } else {
               console.log("Received 'GAME OVER' event from goli, But now goli is not active");
+            }
+          }
+
+          // RESET CODE
+          // gameOver signal received from goli via server
+          if(msg.event == 'refresh' && msg.to == 'player') {
+            if(goliActive == true) {
+              console.log("Server broadcasted REFRESH signal. Targeted to player");
+              // Refresh player view
+              window.location.reload();
+            } else {
+              console.log("Server broadcasted REFRESH signal. Targeted to player, but now player is not active");
             }
           }
         });

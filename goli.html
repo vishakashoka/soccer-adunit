@@ -90,6 +90,11 @@
             } else if(msg.event == 'resetGame' && msg.to == 'goli') {
               console.log("Received 'Restart game' event from player via server. Restarting now!");
               GoliGame.reset();
+            } else if(msg.event == 'refresh' && msg.to == 'goli') {   // RESET CODE
+              console.log("Server broadcasted REFRESH signal. Targeted to goli");
+              
+              // Refresh goli view
+              window.location.reload();
             } 
         });
 
@@ -118,6 +123,13 @@
         iosocket.on('disconnect', function() {
           console.log('Goli: I got disconnected from Node server');
         });
+    });
+    
+    // RESET CODE
+    // Notify server that goli was refreshed
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log("Goli DOM was loaded. Notifying server");
+      iosocket.emit('goliLoaded', 'Goli DOM Loaded');    
     });
 
     function resetBall() {
