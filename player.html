@@ -135,7 +135,7 @@
   var yDisp = 1;
   var hitBoundary = false;
   var ballDim = 64;
-  var gravity = 0.3;
+  var gravity = 0.5;
   var bounceFactor = 0.8;
   var ballHalted = false;
   var anim = new Kinetic.Animation(function(frame) {
@@ -200,6 +200,7 @@
 
     // Reset animation
     anim.start();
+    kick.start();
   }
 
   function computeAngleOfKick() {
