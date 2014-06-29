@@ -109,7 +109,7 @@
 
     setTimeout(function() {
       $(".timerContainer").css('display', 'none');
-    }, 7000);
+    }, 5000);
 
     // add the layer to the stage
     stage.add(backLayer);
@@ -157,7 +157,7 @@
       yDisp += gravity;
 
       // If ball crossed the floor. Bounce it back
-      if (bY + ballDim + yDisp > sSize['height']) {
+      if (bY + ballDim + yDisp > sSize['height'] - 10) {
         yDisp *= -bounceFactor;
 
         if(Math.abs(yDisp) <= 0.7 && !ballHalted){
