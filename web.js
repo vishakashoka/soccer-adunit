@@ -6,8 +6,8 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
-app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 8080);  
-app.set('ipaddr', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
+app.set('port', process.env.PORT || 5000);  
+//app.set('ipaddr', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
 
 /**
  *  Define the sample application.
@@ -318,7 +318,7 @@ var SoccerApp = function() {
      */
     self.start = function() {
         //  Start the app on the specific interface (and port).
-        server.listen(app.get('port'), app.get('ipaddr'), function() {
+        server.listen(app.get('port'), function() {
             console.log('%s: Soccer App started on %s:%d ...',
                         Date(Date.now() ), app.get('ipaddr'), app.get('port'));
         });
