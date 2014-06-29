@@ -50,15 +50,13 @@ var SoccerApp = function() {
      */
     self.populateCache = function() {
         if (typeof self.zcache === "undefined") {
-            self.zcache = { 
-                'index.html': '',
+            self.zcache = {
                 'player.html': '',
                 'goli.html': ''
             };
         }
 
         //  Local cache for static content.
-        self.zcache['index.html'] = fs.readFileSync('./index.html');
         self.zcache['player.html'] = fs.readFileSync('./player.html');
         self.zcache['goli.html'] = fs.readFileSync('./goli.html');
     };
@@ -266,11 +264,6 @@ var SoccerApp = function() {
         self.routes['/asciimo'] = function(req, res) {
             var link = "http://i.imgur.com/kmbjB.png";
             res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
         };
 
         self.routes['/player'] = function(req, res) {
