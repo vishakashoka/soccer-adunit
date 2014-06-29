@@ -1,0 +1,121 @@
+<html>
+<head> 
+<title>Goli View</title>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<!-- Socket JS -->
+<script src="/socket.io/socket.io.js"></script>
+
+<style type="text/css">
+  * {
+    padding: 0;
+    margin: 0;
+  }
+  html, body {
+    overflow: hidden;
+    -ms-touch-action: none;
+    font-family: 'Electrolize';
+  }
+  canvas {
+    touch-action-delay: none;
+    touch-action: none;
+    -ms-touch-action: none;
+  }
+
+  @font-face {
+    font-family: 'Electrolize';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Electrolize'), local('Electrolize-Regular'), url(http://themes.googleusercontent.com/static/fonts/electrolize/v2/DDy9sgU2U7S4xAwH5thnJ4bN6UDyHWBl620a-IRfuBk.woff) format('woff');
+  }
+</style>
+
+</head>
+
+<body>
+<h1>I AM THE GOLI VIEW</h1>
+<script>
+  var iosocket = null;
+
+  // socket events and handlers
+  $(function(){
+    //iosocket = io.connect("http://soccer-adunit.rhcloud.com:8000");
+    iosocket = io.connect();
+    var playerActive = true;
+    var registered = false;
+
+    iosocket.on('connect', function () {
+        console.log('Goli socket connection successful');
+        
+        if(!registered) {
+          // Register player identity with server
+          iosocket.emit('identity', 'goli');
+          registered = true;
+        }
+
+        // Once connection is established, setup events listeners
+        // for all events our app expects to be received from server
+
+        // Received a 'message' from server and send an 'ack-message' back
+        iosocket.on('message', function(msg) {
+            // expand ad signal received from player via server
+            if(msg.event == 'expand' && msg.to == 'goli') {
+              if(playerActive) {
+                console.log("Received expand AD request in goli. Expanding Now!");
+                // Eric expand function
+              } else {
+                console.log("Received expand AD request in goli. But, player is not active");
+              }
+            } else if(msg.event == 'readyToKick' && msg.to == 'goli') {
+              console.log("Received 'Ball is Ready for Kick' event from player via server");
+              // Eric function for goli ready animation
+
+            } else if(msg.event == 'dragStart' && msg.to == 'goli') {
+              console.log("Received 'User starting dragging the ball' event from player via server");
+              // Eric function for goli ready animation
+            } else if(msg.event == 'dragEnd' && msg.to == 'goli') {
+              console.log("Received 'User Kicked the ball at "+msg.kickAngle+" degrees' signal from player via server");
+              // Eric function for ball kicked
+              var kickAngle = msg.kickAngle;
+
+              setTimeout(function() { resetBall(); }, 5000);
+            }
+        });
+
+        // Received acknowledgement message from server
+        iosocket.on('ackmessage', function(msg) {
+          if(msg.event === 'identity' && msg.registered === 'true') {
+            console.log("Goli requesting player status");
+            iosocket.emit('pingPlayer', 'Is Player Active ?');
+          }else if(msg.event === 'pingPlayer') {
+            if(msg.playerStatus === 'true') {
+              playerActive = true;
+              console.log('Player is active. I am ready for the Ball to kick in!');
+            } else {
+              console.log('Player is inactive');
+            }
+          }
+        });
+
+        // Server notifies me when player is disconnected
+        iosocket.on('playerDisconnect', function(data) {
+          console('Server notified me about player disconnection');
+          playerActive = false;
+        });
+
+        // Server got disconnected. Wanna retry ?
+        iosocket.on('disconnect', function() {
+          console.log('Goli: I got disconnected from Node server');
+        });
+    });
+
+    function resetBall() {
+      console.log("Goli sending 'reset ball for next kick' signal to player");
+      iosocket.emit('message', {'event': 'resetBall', 'to': 'player'});
+    }
+
+  });
+</script>
+</body>
+</html>
