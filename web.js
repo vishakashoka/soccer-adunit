@@ -9,11 +9,11 @@ app.set('port', process.env.PORT || 5000);
 var server = require('http').createServer(app).listen(app.get('port'));
 var io = require('socket.io').listen(server);
 
-io.configure(function () {
-    io.set("transports", ["xhr-polling"]);
-    io.set("polling duration", 10);
-    io.set("log level", 1);
-});
+// io.configure(function () {
+//     io.set("transports", ["xhr-polling"]);
+//     io.set("polling duration", 10);
+//     io.set("log level", 1);
+// });
 
 //app.set('ipaddr', process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1");
 
