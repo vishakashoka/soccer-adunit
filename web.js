@@ -4,6 +4,7 @@ var fs      = require('fs');
 var express = require("express");
 var app = express();
 
+app.use(express.static(__dirname + '/public'));
 app.set('port', process.env.PORT || 5000); 
 
 var server = require('http').createServer(app).listen(app.get('port'));
@@ -51,12 +52,14 @@ var SoccerApp = function() {
     self.populateCache = function() {
         if (typeof self.zcache === "undefined") {
             self.zcache = {
+                'host.html': '',
                 'player.html': '',
                 'goli.html': ''
             };
         }
 
         //  Local cache for static content.
+        self.zcache['host.html'] = fs.readFileSync('./host.html');
         self.zcache['player.html'] = fs.readFileSync('./player.html');
         self.zcache['goli.html'] = fs.readFileSync('./goli.html');
     };
@@ -155,7 +158,19 @@ var SoccerApp = function() {
                     }
                   }
 
-                  // resetBall signal received from player via server
+                  // resetGame signal received from player via server
+                  if(msg.event === 'resetGame') {
+                    console.log("Received resetGame signal from player");
+
+                    if(client.goli.status === 'active') {
+                        console.log("Server sending resetGame signal it to Goli.");
+                        io.emit('message', {'event': 'resetGame', 'to': 'goli'});
+                    } else {
+                        console.log('Goli is inactive. Could not send resetGame signal.');
+                    }
+                  }
+
+                  // resetBall signal received from goli via server
                   if(msg.event === 'resetBall') {
                     console.log("Received resetBall signal from goli");
 
@@ -164,6 +179,18 @@ var SoccerApp = function() {
                         io.emit('message', {'event': 'resetBall', 'to': 'player'});
                     } else {
                         console.log('Player is inactive. Could not send resetBall signal.');
+                    }
+                  }
+
+                  // gameOver signal received from goli via server
+                  if(msg.event === 'gameOver') {
+                    console.log("Received gameOver signal from goli");
+
+                    if(client.player.status === 'active') {
+                        console.log("Server sending gameOver signal it to Player.");
+                        io.emit('message', {'event': 'gameOver', 'to': 'player'});
+                    } else {
+                        console.log('Player is inactive. Could not send gameOver signal.');
                     }
                   }
                 },
@@ -264,6 +291,14 @@ var SoccerApp = function() {
         self.routes['/asciimo'] = function(req, res) {
             var link = "http://i.imgur.com/kmbjB.png";
             res.send("<html><body><img src='" + link + "'></body></html>");
+        };
+
+        self.routes['/host'] = function(req, res) {
+            res.setHeader('Content-Type', 'text/html');
+            res.send(self.cache_get('host.html') );
+
+            // Set host status active
+            client.host.status = 'active';
         };
 
         self.routes['/player'] = function(req, res) {

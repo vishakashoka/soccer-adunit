@@ -16,319 +16,13 @@
 <!-- Socket JS -->
 <script src="/socket.io/socket.io.js"></script>
 
-<!-- <link rel="stylesheet" type="text/css" href="timer.css"> -->
+<!-- Main CSS Files -->
+<link rel="stylesheet" type="text/css" href="/css/general.css">
+<link rel="stylesheet" type="text/css" href="/css/spinner.css">
+<link rel="stylesheet" type="text/css" href="/css/timer.css">
 </head>
 
 <body>
-  <style type="text/css">
-    * {
-      padding: 0;
-      margin: 0;
-    }
-    html, body {
-      overflow: hidden;
-      -ms-touch-action: none;
-      font-family: 'Electrolize';
-    }
-    canvas {
-      touch-action-delay: none;
-      touch-action: none;
-      -ms-touch-action: none;
-    }
-
-    @font-face {
-      font-family: 'Electrolize';
-      font-style: normal;
-      font-weight: 400;
-      src: local('Electrolize'), local('Electrolize-Regular'), url(http://themes.googleusercontent.com/static/fonts/electrolize/v2/DDy9sgU2U7S4xAwH5thnJ4bN6UDyHWBl620a-IRfuBk.woff) format('woff');
-    }
-
-    /* Loading Circle */
-    .circle {
-      background-color: rgba(0,0,0,0);
-      border:5px solid rgba(0,183,229,0.9);
-      opacity:.9;
-      border-right:5px solid rgba(0,0,0,0);
-      border-left:5px solid rgba(0,0,0,0);
-      border-radius:50px;
-      box-shadow: 0 0 35px #2187e7;
-      width:50px;
-      height:50px;
-      margin:0 auto;
-      -moz-animation:spinPulse 1s infinite ease-in-out;
-      -webkit-animation:spinPulse 1s infinite linear;
-    }
-    .circle1 {
-      background-color: rgba(0,0,0,0);
-      border:5px solid rgba(0,183,229,0.9);
-      opacity:.9;
-      border-left:5px solid rgba(0,0,0,0);
-      border-right:5px solid rgba(0,0,0,0);
-      border-radius:50px;
-      box-shadow: 0 0 15px #2187e7; 
-      width:30px;
-      height:30px;
-      margin:0 auto;
-      position:relative;
-      top:-50px;
-      -moz-animation:spinoffPulse 1s infinite linear;
-      -webkit-animation:spinoffPulse 1s infinite linear;
-    }
-
-    @-moz-keyframes spinPulse {
-      0% { -moz-transform:rotate(160deg); opacity:0; box-shadow:0 0 1px #2187e7;}
-      50% { -moz-transform:rotate(145deg); opacity:1; }
-      100% { -moz-transform:rotate(-320deg); opacity:0; }
-    }
-    @-moz-keyframes spinoffPulse {
-      0% { -moz-transform:rotate(0deg); }
-      100% { -moz-transform:rotate(360deg);  }
-    }
-    @-webkit-keyframes spinPulse {
-      0% { -webkit-transform:rotate(160deg); opacity:0; box-shadow:0 0 1px #2187e7; }
-      50% { -webkit-transform:rotate(145deg); opacity:1;}
-      100% { -webkit-transform:rotate(-320deg); opacity:0; }
-    }
-    @-webkit-keyframes spinoffPulse {
-      0% { -webkit-transform:rotate(0deg); }
-      100% { -webkit-transform:rotate(360deg); }
-    }
-
-    #spinnerContainer {
-      margin-top: 250px;
-    }
-
-    #spinnerContainer h3 {
-      color: rgba(0,183,229,0.9);
-      margin: 0 auto;
-      width: 180px;
-    }
-
-    #soccerContainer {
-      display: none;
-    }
-
-.timerContainer{
-  width: 100%;
-  position: relative;
-  overflow:hidden;
-  display: none;
-}
-
-.sp-container {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  background: -webkit-radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3) 35%, rgba(0, 0, 0, 0.7));
-  background: -moz-radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3) 35%, rgba(0, 0, 0, 0.7));
-  background: -ms-radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3) 35%, rgba(0, 0, 0, 0.7));
-  background: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3) 35%, rgba(0, 0, 0, 0.7));
-}
-.sp-content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0px;
-  top: 0px;
-  z-index: 1000;
-}
-.sp-container h2 {
-  position: absolute;
-  top: 50%;
-  line-height: 100px;
-  height: 90px;
-  margin-top: -50px;
-  font-size: 90px;
-  width: 100%;
-  text-align: center;
-  color: transparent;
-  -webkit-animation: blurFadeInOut 3s ease-in backwards;
-  -moz-animation: blurFadeInOut 3s ease-in backwards;
-  -ms-animation: blurFadeInOut 3s ease-in backwards;
-  animation: blurFadeInOut 3s ease-in backwards;
-}
-.sp-container h2.frame-1 {
-  -webkit-animation-delay: 0s;
-  -moz-animation-delay: 0s;
-  -ms-animation-delay: 0s;
-  animation-delay: 0s;
-}
-.sp-container h2.frame-2 {
-  -webkit-animation-delay: 2s;
-  -moz-animation-delay: 2s;
-  -ms-animation-delay: 2s;
-  animation-delay: 2s;
-}
-.sp-container h2.frame-3 {
-  -webkit-animation-delay: 4s;
-  -moz-animation-delay: 4s;
-  -ms-animation-delay: 4s;
-  animation-delay: 4s;
-}
-.sp-container h2.frame-4 {
-  font-size: 160px;
-  -webkit-animation-delay: 6s;
-  -moz-animation-delay: 6s;
-  -ms-animation-delay: 6s;
-  animation-delay: 6s;
-}
-
-/**/
-@-webkit-keyframes blurFadeInOut{
-  0%{
-    opacity: 0;
-    text-shadow: 0px 0px 40px #fff;
-    -webkit-transform: scale(1.3);
-  }
-  20%,75%{
-    opacity: 1;
-    text-shadow: 0px 0px 1px #fff;
-    -webkit-transform: scale(1);
-  }
-  100%{
-    opacity: 0;
-    text-shadow: 0px 0px 50px #fff;
-    -webkit-transform: scale(0);
-  }
-}
-@-webkit-keyframes blurFadeIn{
-  0%{
-    opacity: 0;
-    text-shadow: 0px 0px 40px #fff;
-    -webkit-transform: scale(1.3);
-  }
-  50%{
-    opacity: 0.5;
-    text-shadow: 0px 0px 10px #fff;
-    -webkit-transform: scale(1.1);
-  }
-  100%{
-    opacity: 1;
-    text-shadow: 0px 0px 1px #fff;
-    -webkit-transform: scale(1);
-  }
-}
-@-webkit-keyframes fadeInBack{
-  0%{
-    opacity: 0;
-    -webkit-transform: scale(0);
-  }
-  50%{
-    opacity: 0.4;
-    -webkit-transform: scale(2);
-  }
-  100%{
-    opacity: 0.2;
-    -webkit-transform: scale(5);
-  }
-}
-@-webkit-keyframes fadeInRotate{
-  0%{
-    opacity: 0;
-    -webkit-transform: scale(0) rotate(360deg);
-  }
-  100%{
-    opacity: 1;
-    -webkit-transform: scale(1) rotate(0deg);
-  }
-}
-/**/
-@-moz-keyframes blurFadeInOut{
-  0%{
-    opacity: 0;
-    text-shadow: 0px 0px 40px #fff;
-    -moz-transform: scale(1.3);
-  }
-  20%,75%{
-    opacity: 1;
-    text-shadow: 0px 0px 1px #fff;
-    -moz-transform: scale(1);
-  }
-  100%{
-    opacity: 0;
-    text-shadow: 0px 0px 50px #fff;
-    -moz-transform: scale(0);
-  }
-}
-@-moz-keyframes blurFadeIn{
-  0%{
-    opacity: 0;
-    text-shadow: 0px 0px 40px #fff;
-    -moz-transform: scale(1.3);
-  }
-  100%{
-    opacity: 1;
-    text-shadow: 0px 0px 1px #fff;
-    -moz-transform: scale(1);
-  }
-}
-@-moz-keyframes fadeInBack{
-  0%{
-    opacity: 0;
-    -moz-transform: scale(0);
-  }
-  50%{
-    opacity: 0.4;
-    -moz-transform: scale(2);
-  }
-  100%{
-    opacity: 0.2;
-    -moz-transform: scale(5);
-  }
-}
-/**/
-@keyframes blurFadeInOut{
-  0%{
-    opacity: 0;
-    text-shadow: 0px 0px 40px #fff;
-    transform: scale(1.3);
-  }
-  20%,75%{
-    opacity: 1;
-    text-shadow: 0px 0px 1px #fff;
-    transform: scale(1);
-  }
-  100%{
-    opacity: 0;
-    text-shadow: 0px 0px 50px #fff;
-    transform: scale(0);
-  }
-}
-@keyframes blurFadeIn{
-  0%{
-    opacity: 0;
-    text-shadow: 0px 0px 40px #fff;
-    transform: scale(1.3);
-  }
-  50%{
-    opacity: 0.5;
-    text-shadow: 0px 0px 10px #fff;
-    transform: scale(1.1);
-  }
-  100%{
-    opacity: 1;
-    text-shadow: 0px 0px 1px #fff;
-    transform: scale(1);
-  }
-}
-@keyframes fadeInBack{
-  0%{
-    opacity: 0;
-    transform: scale(0);
-  }
-  50%{
-    opacity: 0.4;
-    transform: scale(2);
-  }
-  100%{
-    opacity: 0.2;
-    transform: scale(5);
-  }
-}
-  </style>
   <div id="soccerContainer"></div>
 
   <!-- LOOP LOADER -->
@@ -356,7 +50,7 @@
   </div>
 
 <script defer="defer">
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
 
   var stage = new Kinetic.Stage({
     container: 'soccerContainer',
@@ -486,7 +180,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, ballLayer);
   
   function dropBall() {
-    console.log(ball);
     // Reset ball drop start position
     ball.setAttr('x', window.innerWidth/2);
     ball.setAttr('y', 50);
@@ -535,13 +228,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Touch Interaction
   var x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+  var startTime = endTime = 0;
   function setupTouchEvents() {
     ball.on('touchstart', function() {
       touchStartPos = stage.getPointerPosition();
       x1 = touchStartPos.x;
       y1 = touchStartPos.y;
       console.log('Drag start = '+x1+' '+y1);
-      startTime = Math.round(+new Date()/1000);
+
+      var d = new Date();
+      startTime = d.getTime();
+      startTime = startTime / 1000;
 
       console.log('Player started dragging the ball');
       iosocket.emit('message', {'event': 'dragStart'});
@@ -557,14 +254,16 @@ document.addEventListener('DOMContentLoaded', function() {
       touchEndPos = stage.getPointerPosition();
       x2 = touchEndPos.x;
       y2 = touchEndPos.y;
-      endTime = Math.round(+new Date()/1000);
+
+      var d = new Date();
+      endTime = d.getTime();
+      endTime = endTime / 1000;
+
       console.log('Drag end = '+x2+' '+y2);
 
       var kickAngle = computeAngleOfKick();
       console.log('Player kicked the ball in '+kickAngle+' degrees');
       iosocket.emit('message', {'event': 'dragEnd', 'kickAngle': kickAngle});
-
-      //dropBall();
 
       // Run Kick animation
       var kick = new Kinetic.Animation(function(frame) {
@@ -580,10 +279,17 @@ document.addEventListener('DOMContentLoaded', function() {
         var timeTaken = endTime - startTime;
 
         // Distance between points
-        var dist = Math.sqrt( Math.pow((x2-x1), 2), Math.pow((y2-y1), 2) );
+        var dist = Math.sqrt( Math.pow((x2-x1), 2) + Math.pow((y2-y1), 2) );
 
         // Speed of Kick
         var speed = dist / timeTaken;
+
+        if(!isFinite(speed)) {
+          console.log('Speed of kick is infinite. Defaulting to 0.5 speed');
+          speed = 0.5;
+        }
+
+        console.log('Speed of kick : '+speed+' dist = '+dist+' timeTaken = '+timeTaken);
 
         // Speed of Displacement
         var xKickSpeed = xDisp / timeTaken;
@@ -620,7 +326,9 @@ document.addEventListener('DOMContentLoaded', function() {
           anim.stop();
         }
       });
-
+  
+      xDisp = 0;
+      yDisp = 0;
       kick.start();
     });
   }
@@ -635,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // kicked out left side of the screen
     if(x < -ballDim || y < -ballDim) {
       return false;
-    }
+    } 
 
     return true;
   }
@@ -670,6 +378,17 @@ document.addEventListener('DOMContentLoaded', function() {
               dropBall();
             } else {
               console.log("Received 'reset the ball for next kick' event from goli, But now goli is not active");
+            }
+          }
+
+          // gameOver signal received from goli via server
+          if(msg.event == 'gameOver' && msg.to == 'player') {
+            if(goliActive == true) {
+              console.log("Received 'GAME OVER' event from goli. Display 'options' menu");
+              // options menu
+              iosocket.emit('message' , {'event': 'resetGame', 'to': 'goli'});
+            } else {
+              console.log("Received 'GAME OVER' event from goli, But now goli is not active");
             }
           }
         });
