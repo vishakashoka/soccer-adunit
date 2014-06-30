@@ -41,6 +41,13 @@
       float: left;
     }
 
+    #resetButton {
+      position: absolute;
+      bottom: 0px;
+      float: right;
+      right: 0px;
+    }
+
     .sliderItem {
       width: 90%;
       height: 60px;
@@ -121,6 +128,7 @@
     </div>
   </div>
   <img id="menuButton" src="/images/menu-icon_white.png" height="30" width="30">
+  <img id="resetButton" src="/images/5577eb6.png" height="30" width="30">
 <script defer="defer">
   document.addEventListener('DOMContentLoaded', function() {
 
@@ -138,6 +146,12 @@
 
       // close the menu
       $('#menuButton').click();
+    });
+
+    $('#resetButton').click(function() {
+      //reset server
+      console.log("Player sending reset signal to server.");
+      resetApp();
     });
 
   var stage = new Kinetic.Stage({
@@ -288,10 +302,6 @@
 
     // Reset animation
     anim.start();
-
-    // reset server
-    // console.log("Player sending reset signal to server.");
-    // resetApp();
   }
 
   function computeAngleOfKick() {
