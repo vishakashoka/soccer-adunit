@@ -23,6 +23,62 @@
 </head>
 
 <body>
+  <style>
+    #slider {
+      background: #383838;
+      width: 100%;
+      height: 80%;
+      display: none;
+      float: left;
+      position: absolute;
+      top: 0px;
+      opacity: 0.9;
+    }
+
+    #menuButton {
+      position: absolute;
+      bottom: 0px;
+      float: left;
+    }
+
+    .sliderItem {
+      width: 90%;
+      height: 60px;
+      background: white;
+      margin: 40px 20px 40px 20px;
+    }
+
+    .share {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .itemText {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .learnMore {
+      float: left;
+    }
+
+    .ea-logo {
+      width: 40px;
+      height: 40px;
+      margin-top: 10px;
+    }
+
+    .rateAdText {
+      padding: 0px;
+    }
+
+    .rateAdImage {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      margin-top: 5px;
+    }
+  </style>
   <div id="soccerContainer"></div>
 
   <!-- LOOP LOADER -->
@@ -48,9 +104,41 @@
           </div>
       </div>
   </div>
-
+  <div id="slider">
+    <div class='sliderItem restartGame'>
+      <h3 class="itemText">Restart Game</h3>
+    </div>
+    <div class='sliderItem'>
+      <img class="share" src="/images/social.png"/>
+    </div>
+    <div class='sliderItem'>
+      <h3 class="itemText rateAdText">Rate this Ad experience</h3>
+      <img class='rateAdImage' src="/images/start-rating.png"/>
+    </div>
+    <div class='sliderItem'>
+      <h3 class="itemText learnMore">Learn more about </h3>
+      <img class='ea-logo' src="/images/ea-logo.png"/>
+    </div>
+  </div>
+  <img id="menuButton" src="/images/menu-icon_white.png" height="30" width="30">
 <script defer="defer">
   document.addEventListener('DOMContentLoaded', function() {
+
+    $('#menuButton').click(function () {
+      if ( $( "#slider" ).is( ":hidden" ) ) {
+        $( "#slider" ).slideDown( "slow" );
+      } else {
+        $( "#slider" ).slideUp("fast");
+      }
+    });
+
+    $('.restartGame').click(function() {
+      // options menu
+      iosocket.emit('message' , {'event': 'resetGame', 'to': 'goli'});
+
+      // close the menu
+      $('#menuButton').click();
+    });
 
   var stage = new Kinetic.Stage({
     container: 'soccerContainer',
@@ -395,8 +483,8 @@
           if(msg.event == 'gameOver' && msg.to == 'player') {
             if(goliActive == true) {
               console.log("Received 'GAME OVER' event from goli. Display 'options' menu");
-              // options menu
-              iosocket.emit('message' , {'event': 'resetGame', 'to': 'goli'});
+              // Open the menu for options
+              $('#menuButton').click();
             } else {
               console.log("Received 'GAME OVER' event from goli, But now goli is not active");
             }
