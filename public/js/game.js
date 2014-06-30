@@ -1372,7 +1372,7 @@ init = function() {
   var images, loader;
 
   // resize marquee to height=200px;
-  $("#sugarad-728x90", window.top.document).css('height', '200px');
+  $("#sugarad-728x90", window.top.document).css('height', '250px');
 
   createjs.MotionGuidePlugin.install();
   window.canvas = createCanvasContext(970, 600);
