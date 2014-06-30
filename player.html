@@ -269,11 +269,15 @@
         if(Math.abs(yDisp) <= 0.7 && !ballHalted){
           bounceFactor = 0;
           yDisp = 0;
+          xDisp = 0;
           gravity = 0;
           ballHalted = true;
 
           console.log('Ball is ready to kick! Notifying goli');
           iosocket.emit('message', {'event': 'readyToKick'});
+
+          // Stop ball drop animation when ball is on floor
+          //anim.stop();
         }
       }
 
@@ -442,7 +446,7 @@
           ballOnScreen = false;
         }
       });
-  
+
       xDisp = 0;
       yDisp = 0;
       kick.start();
@@ -547,7 +551,7 @@
 
         // Server notifies me when player is disconnected
         iosocket.on('goliDisconnect', function(data) {
-          console('Server notified me about goli disconnection');
+          console.log('Server notified me about goli disconnection');
           goliActive = false;
         });
 

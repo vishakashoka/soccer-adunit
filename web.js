@@ -117,7 +117,6 @@ var SoccerApp = function() {
                     if(client.goli.status === 'active') {
                         console.log("Server sending expand Ad signal it to Goli.");
                         io.emit('message', {'event': 'expand', 'to': 'goli'});
-                        socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Goli is inactive. Could not send expand Ad signal.');
                         socket.emit('ackmessage', 'ACK');
@@ -134,7 +133,6 @@ var SoccerApp = function() {
                         socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Goli is inactive. Could not send readyToKick signal.');
-                        socket.emit('ackmessage', 'ACK');
                     }
                   }
 
@@ -145,7 +143,6 @@ var SoccerApp = function() {
                     if(client.goli.status === 'active') {
                         console.log("Server sending dragStart signal it to Goli.");
                         io.emit('message', {'event': 'dragStart', 'to': 'goli'});
-                        socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Goli is inactive. Could not send dragStart signal.');
                         socket.emit('ackmessage', 'ACK');
@@ -159,7 +156,6 @@ var SoccerApp = function() {
                     if(client.goli.status === 'active') {
                         console.log("Server sending dragEnd signal it to Goli.");
                         io.emit('message', {'event': 'dragEnd', 'to': 'goli', 'kickAngle': msg.kickAngle});
-                        socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Goli is inactive. Could not send dragEnd signal.');
                         socket.emit('ackmessage', 'ACK');
@@ -173,7 +169,6 @@ var SoccerApp = function() {
                     if(client.goli.status === 'active') {
                         console.log("Server sending resetGame signal it to Goli.");
                         io.emit('message', {'event': 'resetGame', 'to': 'goli'});
-                        socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Goli is inactive. Could not send resetGame signal.');
                         socket.emit('ackmessage', 'ACK');
@@ -187,7 +182,6 @@ var SoccerApp = function() {
                     if(client.player.status === 'active') {
                         console.log("Server sending resetBall signal it to Player.");
                         io.emit('message', {'event': 'resetBall', 'to': 'player'});
-                        socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Player is inactive. Could not send resetBall signal.');
                         socket.emit('ackmessage', 'ACK');
@@ -201,7 +195,6 @@ var SoccerApp = function() {
                     if(client.player.status === 'active') {
                         console.log("Server sending gameOver signal it to Player.");
                         io.emit('message', {'event': 'gameOver', 'to': 'player'});
-                        socket.emit('ackmessage', 'ACK');
                     } else {
                         console.log('Player is inactive. Could not send gameOver signal.');
                         socket.emit('ackmessage', 'ACK');

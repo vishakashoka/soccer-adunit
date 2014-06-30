@@ -114,7 +114,7 @@
 
         // Server notifies me when player is disconnected
         iosocket.on('playerDisconnect', function(data) {
-          console('Server notified me about player disconnection');
+          console.log('Server notified me about player disconnection');
           playerActive = false;
         });
 
