@@ -86,7 +86,6 @@
               // Eric function for ball kicked
               var kickAngle = msg.kickAngle;
               GoliGame.kickBall( kickAngle, 0.5 );
-              setTimeout(function() { resetBall(); }, 3500);
             } else if(msg.event == 'resetGame' && msg.to == 'goli') {
               console.log("Received 'Restart game' event from player via server. Restarting now!");
               GoliGame.reset();
@@ -132,7 +131,7 @@
       iosocket.emit('goliLoaded', 'Goli DOM Loaded');    
     });
 
-    function resetBall() {
+    window.resetBall = function() {
       console.log("Goli sending 'reset ball for next kick' signal to player");
       iosocket.emit('message', {'event': 'resetBall', 'to': 'player'});
     }

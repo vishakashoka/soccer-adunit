@@ -241,10 +241,10 @@
   var bounceFactor = 0.8;
   var ballHalted = false;
   var anim = new Kinetic.Animation(function(frame) {
-  var time = frame.time,
-      timeDiff = frame.timeDiff,
-      frameRate = frame.frameRate;
-
+      var time = frame.time,
+          timeDiff = frame.timeDiff,
+          frameRate = frame.frameRate;
+      var ballOnScreen = true;
       // Hold the ball in bounds. Rebound on collision
       var bAttrs = ball.getAttrs();
       var bX = bAttrs['x'];
@@ -282,6 +282,14 @@
   }, ballLayer);
   
   function dropBall() {
+    if(ballOnScreen) {
+      // Ball still on screen. Do not drop again. Duplicate signal from goli
+      return;
+    }
+
+    // rendering ball on screen
+    ballOnScreen = true;
+
     // Reset ball drop start position
     ball.setAttr('x', window.innerWidth/2);
     ball.setAttr('y', 50);
@@ -426,6 +434,8 @@
         if(!ballInViewPort(bAttrs['x'], bAttrs['y'])) {
           kick.stop();
           anim.stop();
+
+          ballOnScreen = false;
         }
       });
   

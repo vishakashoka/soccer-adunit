@@ -1291,7 +1291,10 @@ p.nominalBounds = new cjs.Rectangle(-64.1,-32.4,100.1,150.2);
 			if( window.GoliGame.ballsKicked == 3 ) {
 				scope.gameover.visible = true;
 				// Send "game over" signal to player
-				setTimeout(function() { window.notifyPlayerGameOver(); }, 3000);
+				setTimeout(function() { window.notifyPlayerGameOver(); }, 1000);
+			} else {
+				// More kicks left, so signal player to drop the ball
+				window.resetBall();
 			}
 		}
 		
