@@ -508,7 +508,9 @@
             if(goliActive == true) {
               console.log("Received 'GAME OVER' event from goli. Display 'options' menu");
               // Open the menu for options
-              $('#menuButton').click();
+              if ( $( "#slider" ).is( ":hidden" ) ) {
+                $('#menuButton').click();
+              }
             } else {
               console.log("Received 'GAME OVER' event from goli, But now goli is not active");
             }
